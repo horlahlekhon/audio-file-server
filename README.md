@@ -66,16 +66,16 @@ DATABASE_URL='postgresql://<postgres_user>:<postgres_password>@<postgres_host>:5
 
 SECRET_KEY="secret"
 
-FLASK_CONFIG=development | production
+FLASK_CONFIG=development
 
 FLASK_APP=application.py
 
 ```shell
     pip install -r requirements.txt
-    flask run
+    make run
 ```
 
 #### Test
 ```shell
-    flask test
+    make test
 ```
