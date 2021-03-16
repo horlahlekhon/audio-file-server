@@ -1,3 +1,4 @@
+import datetime
 from pathlib import Path
 
 from werkzeug.utils import secure_filename
@@ -49,12 +50,13 @@ class AudioService:
         if content_type.split("/")[0] != "audio":
             return err_resp("Only Audio file format is allowed", "invalid_audio_format", 400)
         audio = audio_service.get_object(audio_id)
+        uploaded_time = datetime.datetime.now()
         if audio:
             fname = secure_filename(file.filename)
-            fname = f"{audio.uploaded_time}-{audio.id}-{fname}"
+            fname = f"{uploaded_time}__{audio.id}__{fname}"
             save_path = AudioService.check_upload_dir(file_type) / fname
             file.save(save_path.__str__())
-            resp = audio_service.update(audio_id)
+            resp = audio_service.update(audio_id, save_path, uploaded_time)
             return resp
         else:
             resp = err_resp("Audio data not found in database", "404_notfound", 404)

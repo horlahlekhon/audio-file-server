@@ -49,13 +49,16 @@ class SongService:
         return msg
 
     @staticmethod
-    def update(audio_id):
-        if not (audio_book := Song.query.get(audio_id)):
+    def update(audio_id, file_path, uploaded_time):
+        if not (song := Song.query.get(audio_id)):
             return err_resp("Song not found", "song_404", 404)
+        if not file_path.exists() and file_path.is_file():
+            return internal_err_resp("Unable to get the path where the upload is stored, please retry")
         try:
-            audio_book.uploaded_time = datetime.datetime.now()
+            song.uploaded_time = uploaded_time
+            song.file_path = file_path.__str__()
             db.session.commit()
-            audiobook_data = SongService.load_data(audio_book)
+            audiobook_data = SongService.load_data(song)
             resp = message(True, "Song data updated")
             resp["song"] = audiobook_data
             return resp, 200
@@ -69,21 +72,21 @@ class SongService:
 
     @staticmethod
     def get_all():
-        books = Song.query.all()
-        audiobook_data = SongService.load_data(books)
+        songs = Song.query.all()
+        song_data = SongService.load_data(songs)
         resp = message(True, "")
-        resp["song"] = audiobook_data
+        resp["song"] = song_data
         return resp, 200
 
     @staticmethod
     def load_data(song):
-        """ Load audio's data
+        """ Load song's data
 
         Parameters:
         - AudioBook db object or a list of the object
         """
-        audio_schema = SongSchema()
+        song_schema = SongSchema()
         if isinstance(song, list):
-            data = audio_schema.dump(song, many=True)
+            data = song_schema.dump(song, many=True)
             return data
-        return audio_schema.dump(song)
+        return song_schema.dump(song)

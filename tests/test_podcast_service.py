@@ -1,3 +1,6 @@
+from datetime import datetime
+from pathlib import Path
+
 from app.api.audio.podcast_service import PodcastService
 from app.models.model import Podcast
 from tests.utils.base import BaseTestCase
@@ -57,12 +60,16 @@ class TestPodcastService(BaseTestCase):
 
     def test_update_song(self):
         s, req_data = self.create_obj()
-        resp = PodcastService.update(s.id)
+        uploaded_time = datetime.now()
+        file_path = Path("tests/utils/littleaudio.wav")
+        resp = PodcastService.update(s.id, file_path, uploaded_time)
         self.assertIsNotNone(resp[0]["podcast"]["uploaded_time"])
         pd = Podcast.query.get(s.id)
         self.assertIsNotNone(pd)
         self.assertIsNotNone(pd.uploaded_time)
 
     def test_reject_update_given_unknown_id(self):
-        resp = PodcastService.update(3000)
+        uploaded_time = datetime.now()
+        file_path = Path("tests/utils/littleaudio.wav")
+        resp = PodcastService.update(3000, file_path, uploaded_time)
         self.assertEquals(resp[1], 404)

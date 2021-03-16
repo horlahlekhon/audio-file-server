@@ -1,3 +1,6 @@
+from datetime import datetime
+from pathlib import Path
+
 from app.api.audio.song_service import SongService
 from app.models.model import Song
 from tests.utils.base import BaseTestCase
@@ -51,14 +54,18 @@ class TestSongService(BaseTestCase):
 
     def test_update_song(self):
         s, req_data = self.create_obj()
-        resp = SongService.update(s.id)
+        uploaded_time = datetime.now()
+        file_path = Path("tests/utils/littleaudio.wav")
+        resp = SongService.update(s.id, file_path, uploaded_time)
         self.assertIsNotNone(resp[0]["song"]["uploaded_time"])
         pd = Song.query.get(s.id)
         self.assertIsNotNone(pd)
         self.assertIsNotNone(pd.uploaded_time)
 
     def test_reject_update_given_unknown_id(self):
-        resp = SongService.update(3000)
+        uploaded_time = datetime.now()
+        file_path = Path("tests/utils/littleaudio.wav")
+        resp = SongService.update(3000, file_path, uploaded_time)
         self.assertEquals(resp[1], 404)
 
     def test_delete_song(self):

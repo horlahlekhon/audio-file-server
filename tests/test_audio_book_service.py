@@ -1,3 +1,6 @@
+from datetime import datetime
+from pathlib import Path
+
 from app.api.audio.audiobook_service import AudioBookService
 from app.models.model import AudioBook
 from tests.utils.base import BaseTestCase
@@ -67,11 +70,15 @@ class TestAudiobookService(BaseTestCase):
         s = AudioBook(**req_data)
         self.db.session.add(s)
         self.db.session.commit()
-        resp = AudioBookService.update(s.id)
+        uploaded_time = datetime.now()
+        file_path = Path("tests/utils/littleaudio.wav")
+        resp = AudioBookService.update(s.id, file_path, uploaded_time)
         self.assertIsNotNone(resp[0]["audiobook"]["uploaded_time"])
 
     def test_reject_update_given_unknown_id(self):
-        resp = AudioBookService.update(10020)
+        uploaded_time = datetime.now()
+        file_path = Path("tests/utils/littleaudio.wav")
+        resp = AudioBookService.update(10020, file_path, uploaded_time)
         self.assertEquals(resp[1], 404)
 
     def test_delete_song(self):

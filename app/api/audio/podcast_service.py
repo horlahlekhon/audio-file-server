@@ -12,7 +12,7 @@ class PodcastService:
     @staticmethod
     def get(pdcast_id):
         if not (song := Podcast.query.get(pdcast_id)):
-            return err_resp("Audio file not found", "audio_404", 404)
+            return err_resp("Podcast file not found", "audio_404", 404)
         try:
             podcast_data = PodcastService.load_data(song)
 
@@ -50,15 +50,18 @@ class PodcastService:
         return msg
 
     @staticmethod
-    def update(audio_id):
-        if not (audio_book := Podcast.query.get(audio_id)):
+    def update(audio_id, file_path, uploaded_time):
+        if not (podcast := Podcast.query.get(audio_id)):
             return err_resp("Podcast not found", "podcast_404", 404)
+        if not file_path.exists() and file_path.is_file():
+            return internal_err_resp("Unable to get the path where the upload is stored, please retry")
         try:
-            audio_book.uploaded_time = datetime.datetime.now()
+            podcast.uploaded_time = uploaded_time
+            podcast.file_path = file_path.__str__()
             db.session.commit()
-            audiobook_data = PodcastService.load_data(audio_book)
+            podcast_data = PodcastService.load_data(podcast)
             resp = message(True, "Song data sent")
-            resp["podcast"] = audiobook_data
+            resp["podcast"] = podcast_data
             return resp, 200
         except Exception as error:
             current_app.logger.error(error)

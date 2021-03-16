@@ -4,3 +4,8 @@ migrations/
 .env
 *.sqlite
 .idea
+bin
+lib
+audiofiles
+include
+pyvenv.cfg

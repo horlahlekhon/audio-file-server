@@ -1,4 +1,5 @@
 import datetime
+from pathlib import Path
 
 from flask import current_app
 
@@ -48,11 +49,14 @@ class AudioBookService:
         return msg
 
     @staticmethod
-    def update(audio_id):
+    def update(audio_id, file_path: Path, uploaded_time):
         if not (audio_book := AudioBook.query.get(audio_id)):
             return err_resp("Audio file not found", "audio_404", 404)
+        if not file_path.exists() and file_path.is_file():
+            return internal_err_resp("Unable to get the path where the upload is stored, please retry")
         try:
-            audio_book.uploaded_time = datetime.datetime.now()
+            audio_book.uploaded_time = uploaded_time
+            audio_book.file_path = file_path.__str__()
             db.session.commit()
             audiobook_data = AudioBookService.load_data(audio_book)
             resp = message(True, "Audiobook data sent")

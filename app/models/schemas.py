@@ -4,7 +4,7 @@ from marshmallow import fields, validate, EXCLUDE
 from app import ma
 
 
-class SongSchema(ma.ModelSchema):
+class SongSchema(ma.SQLAlchemyAutoSchema):
     name = fields.String(required=True)
     duration = fields.Integer(required=True)
     uploaded_time = fields.DateTime()
@@ -14,7 +14,7 @@ class SongSchema(ma.ModelSchema):
         unknown = EXCLUDE
 
 
-class PodcastSchema(ma.ModelSchema):
+class PodcastSchema(ma.SQLAlchemyAutoSchema):
     duration = fields.Integer(required=True)
     uploaded_time = fields.DateTime()
     host = fields.String(required=True, validate=validate.Length(min=1, max=100))
@@ -26,7 +26,7 @@ class PodcastSchema(ma.ModelSchema):
         unknown = EXCLUDE
 
 
-class AudioBookSchema(ma.ModelSchema):
+class AudioBookSchema(ma.SQLAlchemyAutoSchema):
     duration = fields.Integer(required=True)
     uploaded_time = fields.DateTime()
     author = fields.String(required=True, validate=validate.Length(min=1, max=100))

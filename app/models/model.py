@@ -23,6 +23,8 @@ class AudioBase(db.Model):
     uploaded_time = Column(db.DateTime, unique=False, index=False)
     ts_created = Column(db.DateTime, default=datetime.now)
     ts_updated = Column(db.DateTime, onupdate=datetime.now, default=datetime.now)
+    file_path = Column(db.String, nullable=True)
+
 
     def __init__(self, *args, **kwargs):
         super(AudioBase, self).__init__(*args, **kwargs)
