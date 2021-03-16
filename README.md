@@ -54,7 +54,7 @@ assumming the code will be run on a unix system. create a directory and move in 
 ```shell
     mkdir audio-file-server-env
     cd audio-file-server-env
-    virtualenv --python python3.8  .
+    virtualenv --python python3.9  .
     source bin/activate
 ```
 
@@ -62,14 +62,18 @@ assumming the code will be run on a unix system. create a directory and move in 
 before running make sure env variables are set. below is a set of required env variables, you can either create a .env file and put them inside
 or export them from the terminal.
 
-DATABASE_URL='postgresql://<postgres_user>:<postgres_password>@<postgres_host>:5432/audio_file_server'
+```shell
+   export  DATABASE_URL='postgresql://<postgres_user>:<postgres_password>@<postgres_host>:5432/audio_file_server'
 
-SECRET_KEY="secret"
+   export SECRET_KEY="secret"
 
-FLASK_CONFIG=development
+   export FLASK_CONFIG=development
 
-FLASK_APP=application.py
+   export FLASK_APP=application
 
+FLASK_ENV="development"
+
+```
 ```shell
     pip install -r requirements.txt
     make run

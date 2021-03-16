@@ -20,8 +20,5 @@ db:
 	flask db upgrade
 
 migrate:
-	export FLASK_CONFIG=development
-	export FLASK_APP=application
-	export FLASK_ENV=development
 	flask db migrate
 	flask db upgrade
